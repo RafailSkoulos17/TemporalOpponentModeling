@@ -103,10 +103,10 @@ for root, dirs, files in os.walk("training_logs", topdown=False):   # run for al
                     kind_of_moves2[moves[1]] = 1
                 data["bids"][ind+1]["move2"] = moves[1]
 
-        for move, times in kind_of_moves1.iteritems():
+        for move, times in kind_of_moves1.items():
             kind_of_moves1[move] = "{0:.2f}".format(float(kind_of_moves1[move]) / num_of_moves1)
 
-        for move, times in kind_of_moves2.iteritems():
+        for move, times in kind_of_moves2.items():
             kind_of_moves2[move] = "{0:.2f}".format(float(kind_of_moves2[move]) / num_of_moves2)
 
         data["kind_of_moves1"] = kind_of_moves1
