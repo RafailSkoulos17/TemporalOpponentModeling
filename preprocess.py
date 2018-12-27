@@ -30,7 +30,7 @@ def find_move_type(u1_curr, u1_prev, u2_curr, u2_prev):
     :return: Type of move
     """
     move = "unknown"
-    if -0.001 <= u1_curr - u1_prev <= 0.001 and u2_curr - u2_prev > 0.001:
+    if -0.001 <= u1_curr - u1_prev <= 0.001 and u2_curr - u2_prev > 0:
         move = "nice"
     elif -0.001 <= u1_curr - u1_prev <= 0.001 and -0.001 <= u2_curr - u2_prev <= 0.001:
         move = "silent"
@@ -75,11 +75,17 @@ for root, dirs, files in os.walk("training_logs", topdown=False):   # run for al
                 # "accept": "agent2"
                 # so we can't find the move's type
                 if agent in bid:
-                    u1_curr = find_util(profile_1, bid[agent])
-                    u1_prev = find_util(profile_1, bids[ind][agent])
+                    if agent == "agent1":
+                        prof = profile_1
+                        opp = profile_2
+                    else:
+                        prof = profile_2
+                        opp = profile_1
+                    u1_curr = find_util(prof, bid[agent])
+                    u1_prev = find_util(prof, bids[ind][agent])
 
-                    u2_curr = find_util(profile_2, bid[agent])
-                    u2_prev = find_util(profile_2, bids[ind][agent])
+                    u2_curr = find_util(opp, bid[agent])
+                    u2_prev = find_util(opp, bids[ind][agent])
 
                     move = find_move_type(u1_curr, u1_prev, u2_curr, u2_prev)
                     moves.append(move)
