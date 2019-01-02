@@ -84,6 +84,8 @@ def update_logs(d):
 
             for ind, bid in enumerate(bids[1:]):  # find each move's type, except form the first one
                 moves = []
+                diff = []
+                diff_prev = []
                 for agent in ["agent1", "agent2"]:  # run for each agent in  every round
                     # in the round that an agent accepts an offer, the training log
                     # has the following format:
@@ -104,6 +106,10 @@ def update_logs(d):
                         u2_curr = find_util(opp, bid[agent], issues)
                         u2_prev = find_util(opp, bids[ind][agent], issues)
 
+                        diff.append(u1_curr-u2_curr)
+                        if ind == 0:
+                            diff_prev.append(u1_prev-u2_prev)
+
                         move = find_move_type(u1_curr, u1_prev, u2_curr, u2_prev)
                         moves.append(move)
                     else:
@@ -119,6 +125,9 @@ def update_logs(d):
                     else:
                         kind_of_moves1[move_num] = 1
                     data["bids"][ind + 1]["move1"] = [moves[0], move_num]
+                    data["bids"][ind + 1]["diff1"] = "{0:.3f}".format(diff[0])
+                    if len(diff_prev) != 0:
+                        data["bids"][ind]["diff1"] = "{0:.3f}".format(diff_prev[0])
                 if moves[1]:
                     num_of_moves2 += 1
                     move_num = move_mapping[moves[1]]
@@ -127,11 +136,17 @@ def update_logs(d):
                     else:
                         kind_of_moves2[move_num] = 1
                     data["bids"][ind + 1]["move2"] = [moves[1], move_num]
+                    data["bids"][ind + 1]["diff2"] = "{0:.3f}".format(diff[1])
+                    if len(diff_prev) != 0:
+                        data["bids"][ind]["diff2"] = "{0:.3f}".format(diff_prev[1])
 
                 if moves[0] and moves[1]:
                     num_of_moves_both += 1
                     move_pair_num = move_pair_mapping[(moves[0], moves[1])]
                     data["bids"][ind + 1]["move_pair_num"] = [(moves[0], moves[1]), move_pair_num]
+                    data["bids"][ind + 1]["combined_diff"] = "{0:.3f}".format(diff[0]-diff[1])
+                    if len(diff_prev) != 0:
+                        data["bids"][ind]["combined_diff"] = "{0:.3f}".format(diff_prev[0] - diff_prev[1])
                     if move_pair_num in kind_of_moves_both:
                         kind_of_moves_both[move_pair_num] += 1
                     else:
