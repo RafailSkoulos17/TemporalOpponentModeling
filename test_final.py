@@ -102,7 +102,7 @@ def update_logs(filename):
     test_naive = []
     test_naive_utils = []
 
-    with open(os.path.join('test_logs', filename), "r") as fin:
+    with open(filename, "r") as fin:
         data = json.load(fin, object_pairs_hook=OrderedDict)
 
     issues = data["issues"]
